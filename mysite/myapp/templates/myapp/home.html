@@ -1,0 +1,21 @@
+<!-- myapp/templates/myapp/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Input</title>
+</head>
+<body>
+    <h1>Text Input Form</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if text %}
+        <h2>You submitted: {{ text }}</h2>
+    {% endif %}
+</body>
+</html>
