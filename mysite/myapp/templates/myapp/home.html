@@ -8,14 +8,18 @@
     <title>My Website</title>
     <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
 </head>
-<body>
+<body> 
     <div class="container">
         <h1>Presedent Aware</h1>
         <form method="post">
             {% csrf_token %}
-            <input type="text" name="user_input" placeholder="Type something..." required>
+            <input type="text" name="text" placeholder="Type something..." required>
             <button type="submit">Submit</button>
         </form>
+        
+        {% if text %}
+            <p>Rephrased Text: {{ text }}</p>
+        {% endif %}
     </div>
 </body>
 </html>
