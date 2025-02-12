@@ -15,7 +15,6 @@
             {% csrf_token %}
             <input type="text" name="user_input" placeholder="Describe your case..." required>
             
-            <!-- File Upload -->
             <div class="file-input-container">
                 <label for="file-upload">Upload a Document (.pdf, .docx):</label>
                 <input type="file" id="file-upload" name="document" accept=".pdf,.docx">
@@ -24,18 +23,15 @@
             <button type="submit">Submit</button>
         </form>
 
-        <!-- Progress Bar -->
         <div id="progress-bar-container">
             <div id="progress-bar"></div>
         </div>
 
-        <!-- Action Buttons (Initially hidden) -->
         <div class="action-buttons" id="action-buttons">
             <button id="train-button" onclick="trainModel()">Train model</button>
             <button id="solution-button" onclick="getSolution()">Get Solution</button>
         </div>
 
-        <!-- Status Message -->
         <div id="status-message"></div>
     </div>
 
