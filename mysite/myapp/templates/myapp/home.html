@@ -8,18 +8,105 @@
     <title>My Website</title>
     <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
 </head>
-<body> 
+<body>
     <div class="container">
-        <h1>Presedent Aware</h1>
-        <form method="post">
+        <h1>Presedent Aware Legal Bot</h1>
+        <form id="upload-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="text" name="text" placeholder="Type something..." required>
+            <input type="text" name="user_input" placeholder="Describe your case..." required>
+            
+            <!-- File Upload -->
+            <div class="file-input-container">
+                <label for="file-upload">Upload a Document (.pdf, .docx):</label>
+                <input type="file" id="file-upload" name="document" accept=".pdf,.docx">
+            </div>
+
             <button type="submit">Submit</button>
         </form>
-        
-        {% if text %}
-            <p>Rephrased Text: {{ text }}</p>
-        {% endif %}
+
+        <!-- Progress Bar -->
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <!-- Action Buttons (Initially hidden) -->
+        <div class="action-buttons" id="action-buttons">
+            <button id="train-button" onclick="trainModel()">Train model</button>
+            <button id="solution-button" onclick="getSolution()">Get Solution</button>
+        </div>
+
+        <!-- Status Message -->
+        <div id="status-message"></div>
     </div>
+
+    <script>
+        // Handle the form submission using AJAX
+        const form = document.getElementById('upload-form');
+        const progressBarContainer = document.getElementById('progress-bar-container');
+        const progressBar = document.getElementById('progress-bar');
+        const actionButtons = document.getElementById('action-buttons');
+        const statusMessage = document.getElementById('status-message');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const formData = new FormData(form);
+
+            // Show the progress bar
+            progressBarContainer.style.display = 'block';
+
+            // Create the AJAX request
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+
+            // Set up the progress event to update the progress bar
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percent + '%';
+                }
+            };
+
+            // Handle the response after file upload
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert('File uploaded successfully!');
+                    // Show action buttons after successful upload
+                    actionButtons.style.display = 'block';
+                } else {
+                    alert('Error uploading file');
+                }
+                // Hide the progress bar once upload is complete
+                progressBarContainer.style.display = 'none';
+                progressBar.style.width = '0%';  // Reset progress bar
+            };
+
+            xhr.onerror = function() {
+                alert('Request failed.');
+                progressBarContainer.style.display = 'none';
+            };
+
+            // Send the request
+            xhr.send(formData);
+        });
+
+        // Dummy function to handle 'Train model' button click
+        function trainModel() {
+            statusMessage.textContent = 'Training model...';
+            // Simulate a delay for model training (You can replace this with actual model training logic)
+            setTimeout(function() {
+                statusMessage.textContent = 'Model trained successfully!';
+            }, 2000);
+        }
+
+        // Dummy function to handle 'Get Solution' button click
+        function getSolution() {
+            statusMessage.textContent = 'Getting Solution...';
+            // Simulate a delay for getting the solution (You can replace this with actual solution retrieval logic)
+            setTimeout(function() {
+                statusMessage.textContent = 'Solution retrieved successfully!';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>

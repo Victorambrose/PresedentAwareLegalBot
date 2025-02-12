@@ -1,21 +1,18 @@
-# myapp/views.py
 from django.shortcuts import render
-from .forms import TextForm
-from textblob import TextBlob
-
-def rephrase_text(text):
-    blob = TextBlob(text)
-    return blob.correct()  
+from django.http import JsonResponse
+from django.core.files.storage import FileSystemStorage
 
 def home(request):
-    text = ""
-    if request.method == 'POST':
-        form = TextForm(request.POST)
-        if form.is_valid():
-            text = form.cleaned_data['text']
-            rephrased_text = str(rephrase_text(text))
-            return render(request, 'myapp/home.html', {'form': form, 'text': rephrased_text})
-    else:
-        form = TextForm()
+    if request.method == 'POST' and request.FILES.get('document'):
+        # Handling the file upload
+        uploaded_file = request.FILES['document']
+        fs = FileSystemStorage()
 
-    return render(request, 'myapp/home.html', {'form': form, 'text': text})
+        # Save the uploaded file
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        file_url = fs.url(filename)
+
+        # Return a JSON response to inform the frontend about the successful upload
+        return JsonResponse({'message': 'File uploaded successfully!', 'file_url': file_url})
+
+    return render(request, 'myapp/home.html')
